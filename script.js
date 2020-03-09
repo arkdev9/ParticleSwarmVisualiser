@@ -2,7 +2,7 @@ var swarm;
 var globeX;
 var globeY;
 function setup() {
-	createCanvas(500, 400);
+	createCanvas(window.innerWidth - 5, window.innerHeight - 5);
 	globeX = width / 2;
 	globeY = height / 2;
 	swarm = new Swarm();
@@ -58,13 +58,17 @@ class Particle {
 	}
 
 	render(swarmBestX, swarmBestY) {
+		let lastBestX = this.bestX;
+		let lastBestY = this.bestY;
+		let lastX = this.x;
+		let lastY = this.y;
 		this.particleBest();
-		// Average swarm best, and particle best
-		// this.x = this.x + (((this.bestX + swarmBestX) / 2) * 0.1);
-		// this.y = this.y + (((this.bestY + swarmBestY) / 2) * 0.1);
-		// Swarm Optima
-		this.x = this.x + (swarmBestX * 0.1);
-		this.y = this.y + (swarmBestY * 0.1);
+		// Calculate new vector from swarm best, and particle best, and inertia
+		// Scale to 0.01 for speed	
+		this.x = this.x + ((this.bestX + swarmBestX + lastBestX)  * 0.01);
+		this.y = this.y + ((this.bestY + swarmBestY + lastBestY) * 0.01);
+
 		circle(this.x, this.y, 5, 5);
+		line(lastX, lastY, this.x, this.y);
 	}
 }
